@@ -1,0 +1,8 @@
+{
+    // ts-node with tsx support
+    "ts-node": {
+        "compilerOptions": {
+            "jsx": "react"
+        }
+    },
+}
