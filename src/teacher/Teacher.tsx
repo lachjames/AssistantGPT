@@ -10,7 +10,7 @@ import { AppBar, Toolbar } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import useApiKey from '../openai_api/api_key';
 import Modal from '@mui/material/Modal';
-import { SettingsWindow } from '../Settings';
+import { SettingsWindow, useSettings } from '../Settings';
 
 // import TreeSelector from './TreeSelector';
 
@@ -52,6 +52,8 @@ const Dropzone = ({ onDrop }: { onDrop: (acceptedFiles: File[]) => void }) => {
 };
 
 const AutoScrollChatWindow = ({ children }: { children: React.ReactNode }) => {
+    const settings = useSettings();
+
     const tolerance = 40;
     const [scroll, setScroll] = useState(false);
     const [curTimeout, setCurTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -75,8 +77,9 @@ const AutoScrollChatWindow = ({ children }: { children: React.ReactNode }) => {
         <div
             id="chat-window"
             style={{
-                height: '80%',
-                width: '100%',
+                // Expand in parent flex
+                flexGrow: 1,
+                width: "100%",
                 overflowY: 'scroll',
                 overflowX: 'hidden',
             }}
@@ -116,19 +119,8 @@ const ChatWindow = (props: { path: DialogNode[] }) => {
     };
 
     return (
-        <div
-            style={{
-                height: '100%',
-                width: '100%',
-                margin: "auto",
-                maxWidth: "1400px",
-            }}
-        >
+        <>
             <AutoScrollChatWindow>
-                {/* <div style={{
-                    height: '80%',
-                    overflowY: 'scroll',
-                }}> */}
                 {props.path.map((node) => (
                     <div
                         key={node.uuid}
@@ -164,7 +156,7 @@ const ChatWindow = (props: { path: DialogNode[] }) => {
                 {/* </div> */}
             </AutoScrollChatWindow>
             <ChatInput currentNode={currentNode} />
-        </div>
+        </>
     );
 };
 
@@ -204,6 +196,8 @@ function Message({ node }: { node: DialogNode }) {
 }
 
 function ChatInput({ currentNode }: { currentNode: DialogNode }) {
+    const settings = useSettings();
+
     const { userResponse } = useConversation();
     const [message, setMessage] = useState('');
 
@@ -225,11 +219,28 @@ function ChatInput({ currentNode }: { currentNode: DialogNode }) {
         }
     }, [message, currentNode, userResponse]);
 
+    if (!settings.openaiApiKey) {
+        return (
+            <div style={{
+                paddingTop: "12px",
+                // Centered
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+            }}>
+                <h1>
+                    Welcome! Please set your OpenAI API key in the settings panel (top-right corner).
+                </h1>
+            </div>
+        )
+    }
+
     return (
-        <div style={{ height: "16%", paddingTop: "12px", }}>
+        <div style={{ flexGrow: 0, height: settings.warn ? "180px" : '160px', width: "100%", paddingTop: "12px", }}>
             <TextField
                 multiline
-                rows={3}
+                rows={settings.warn ? 3 : 4}
                 variant="outlined"
                 value={message}
                 onChange={handleChange}
@@ -239,8 +250,13 @@ function ChatInput({ currentNode }: { currentNode: DialogNode }) {
                         handleClick();
                     }
                 }}
-                style={{ flexGrow: 1, marginRight: '16px', height: "calc(100% - 16px)", width: "100%" }}
+                style={{ marginRight: '16px', width: "100%", marginBottom: "6px" }}
             />
+            {settings.warn ? (
+                <div style={{ fontSize: '14px', color: 'black' }}>
+                    <i>Any AI system might produce inaccurate information, and/or be prone to bias. This app uses the OpenAI API, which I do not control and take no responsibility for. You use this app entirely at your own risk.</i>
+                </div>
+            ) : null}
             <Button variant="contained" color="primary" onClick={handleClick}
                 style={{ marginTop: "0px", width: "100%", height: "30px" }}
             >
@@ -254,7 +270,8 @@ export default function Teacher() {
     const {
         currentNode,
         createTree, setTree,
-        saveToFile, loadFromFile
+        saveToFile, loadFromFile,
+        resetConversation
     } = useConversation();
     const [treeSelectorOpen, setTreeSelectorOpen] = useState(false);
     const { promptForApiKey } = useApiKey();
@@ -273,11 +290,10 @@ export default function Teacher() {
         return path;
     };
 
-    const promptCreateTree = () => {
-        const id = prompt("Enter a name for the new tree");
-        if (id) {
-            createTree(id);
-            setTree(id);
+    const clearConversation = () => {
+        // Prompt user to confirm
+        if (window.confirm("Are you sure you want to clear your conversation history?")) {
+            resetConversation();
         }
     };
 
@@ -296,16 +312,18 @@ export default function Teacher() {
     }, [loadFromFile]);
 
     return (
-        <Box sx={{
-            "& .MuiButton-root": {
-                backgroundColor: "#3c3c3c",
-                color: "white",
-                "&:hover": {
-                    backgroundColor: "#5c5c5c",
+        <Box
+            sx={{
+                "& .MuiButton-root": {
+                    backgroundColor: "#3c3c3c",
                     color: "white",
-                }
-            },
-        }}>
+                    "&:hover": {
+                        backgroundColor: "#5c5c5c",
+                        color: "white",
+                    }
+                },
+            }}
+        >
             <Modal open={settingsOpen} onClose={() => setSettingsOpen(false)}>
                 <Box sx={MODAL_STYLE}>
                     <SettingsWindow />
@@ -313,7 +331,7 @@ export default function Teacher() {
             </Modal>
             <div style={{
                 backgroundColor: '#f5f5f5',
-                height: '100vh',
+                height: '-webkit-fill-available',
                 width: '100vw',
                 // No scroll bars
                 overflow: 'none'
@@ -322,38 +340,61 @@ export default function Teacher() {
                     backgroundColor: '#1e1e1e',
                     color: 'white',
                     width: '100%',
-                    // height: '6%',
+                    height: "64px",
+                    // Center content vertically
+                    display: "flex",
+                    justifyContent: "center",
+                    // alignItems: "center",
                 }}>
                     <Toolbar>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        <Typography variant="h6" component="div" sx={{
+                            flexGrow: 1,
+                            marginRight: "12px",
+                            // Scale down if the window is too small
+                            fontSize: { xs: '1.1em', sm: '1.2em', md: '1.25em' },
+                        }}>
                             AssistantGPT
                         </Typography>
-                        <Button variant="contained" onClick={saveToFile} style={{ marginRight: '8px' }}>
+                        <Button variant="contained" onClick={saveToFile} sx={{
+                            marginRight: { xs: '2px', sm: '4px', md: '6px' },
+                        }}>
                             Save
                         </Button>
-                        {/* <Button variant="contained" onClick={clear} style={{ marginRight: '8px' }}>
-                            Clear
-                        </Button> */}
-                        <div style={{ marginRight: '8px' }}>
+                        <Box sx={{
+                            marginRight: { xs: '2px', sm: '4px', md: '6px' },
+                        }}>
                             <Dropzone onDrop={handleDrop} />
-                        </div>
-                        {/* <Button style={{ marginLeft: "20px", marginRight: "8px" }} variant="contained" onClick={() => setTreeSelectorOpen(true)}>
-                            Topics
-                        </Button> */}
-                        <Button variant="contained" onClick={() => setSettingsOpen(true)} style={{ marginRight: '8px' }}>
+                        </Box>
+                        <Button variant="contained" onClick={clearConversation} sx={{
+                            marginRight: { xs: '2px', sm: '4px', md: '6px' },
+                        }}>
+                            Clear
+                        </Button>
+                        <Button variant="contained" onClick={() => setSettingsOpen(true)} sx={{
+                            marginRight: { xs: '2px', sm: '4px', md: '6px' },
+                        }}>
                             Settings
                         </Button>
                     </Toolbar>
                 </AppBar>
                 {/* <TreeSelector open={treeSelectorOpen} onClose={() => setTreeSelectorOpen(false)} /> */}
-                <div style={{
-                    padding: "12px",
-                    height: 'calc(90vh)',
-                    // height: 'calc(90vh)',
-                    // width: 'calc(96vw)',
-                    // transform: 'translate(2vw, 2vh)',
-                }}>
-                    <ChatWindow path={pathToCurrentNode} />
+                <div style={{ width: "100%", height: "100%", maxWidth: "1400px", margin: "auto" }}>
+                    <div style={{
+                        padding: "12px",
+                        // Expand to fill height and width
+                        height: "calc(100vh - 90px)",
+                        width: "100%",
+                        maxWidth: "90vw",
+                        margin: "auto",
+                        // Column flex
+                        display: "flex",
+                        flexDirection: "column",
+                        // Centered
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}>
+                        <ChatWindow path={pathToCurrentNode} />
+                    </div>
                 </div>
             </div>
         </Box >

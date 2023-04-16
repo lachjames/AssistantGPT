@@ -11,6 +11,7 @@ import {
 } from '../prompts';
 import { processCommands } from '../openai_api/processCommands';
 import { SettingsContext } from '../Settings';
+
 const root: DialogNode = new DialogNode(
     null, "assistant", "", "Hi there! How can I help?"
 );
@@ -62,6 +63,12 @@ const ConversationProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         localStorage.setItem('state', stringify(stateVariables));
     }, [stateVariables]);
 
+
+    const resetConversation = useCallback(() => {
+        setNodes({ [root.uuid]: root });
+        setRoots({ [root.uuid]: new DialogRoot(root.uuid, root, [root.uuid]) });
+        setCurrentNode(root);
+    }, []);
     const createNode = useCallback((parent: DialogNode, role: "user" | "assistant", response: string): DialogNode => {
         // Create a new node
         const newNode: DialogNode = new DialogNode(
@@ -257,6 +264,7 @@ ${node.response}
             userResponse,
             setCurrentNode,
             saveToFile, loadFromFile,
+            resetConversation
         }}>
             {children}
         </ConversationContext.Provider>

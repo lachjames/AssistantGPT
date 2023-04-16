@@ -45,4 +45,5 @@ export interface ConversationContextType {
     loadFromFile: (files: File[]) => void;
     createNode: (parentNode: DialogNode, role: "user" | "assistant", summary: string, response: string) => DialogNode;
     deleteNode: (node: DialogNode) => void;
+    resetConversation: () => void;
 }
