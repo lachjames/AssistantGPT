@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/AssistantGPT/static/css/main.94cc729d.css",
-    "main.js": "/AssistantGPT/static/js/main.d535052a.js",
-    "static/js/787.27115673.chunk.js": "/AssistantGPT/static/js/787.27115673.chunk.js",
+    "main.css": "/AssistantGPT/static/css/main.8b288dd5.css",
+    "main.js": "/AssistantGPT/static/js/main.e0a13752.js",
+    "static/js/787.2fdcc60f.chunk.js": "/AssistantGPT/static/js/787.2fdcc60f.chunk.js",
     "index.html": "/AssistantGPT/index.html",
-    "main.94cc729d.css.map": "/AssistantGPT/static/css/main.94cc729d.css.map",
-    "main.d535052a.js.map": "/AssistantGPT/static/js/main.d535052a.js.map",
-    "787.27115673.chunk.js.map": "/AssistantGPT/static/js/787.27115673.chunk.js.map"
+    "main.8b288dd5.css.map": "/AssistantGPT/static/css/main.8b288dd5.css.map",
+    "main.e0a13752.js.map": "/AssistantGPT/static/js/main.e0a13752.js.map",
+    "787.2fdcc60f.chunk.js.map": "/AssistantGPT/static/js/787.2fdcc60f.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.94cc729d.css",
-    "static/js/main.d535052a.js"
+    "static/css/main.8b288dd5.css",
+    "static/js/main.e0a13752.js"
   ]
 }
