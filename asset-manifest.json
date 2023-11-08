@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/AssistantGPT/static/css/main.8b288dd5.css",
-    "main.js": "/AssistantGPT/static/js/main.e0a13752.js",
+    "main.js": "/AssistantGPT/static/js/main.241834b9.js",
     "static/js/787.2fdcc60f.chunk.js": "/AssistantGPT/static/js/787.2fdcc60f.chunk.js",
     "index.html": "/AssistantGPT/index.html",
     "main.8b288dd5.css.map": "/AssistantGPT/static/css/main.8b288dd5.css.map",
-    "main.e0a13752.js.map": "/AssistantGPT/static/js/main.e0a13752.js.map",
+    "main.241834b9.js.map": "/AssistantGPT/static/js/main.241834b9.js.map",
     "787.2fdcc60f.chunk.js.map": "/AssistantGPT/static/js/787.2fdcc60f.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.8b288dd5.css",
-    "static/js/main.e0a13752.js"
+    "static/js/main.241834b9.js"
   ]
 }
