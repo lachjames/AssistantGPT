@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/AssistantGPT/static/css/main.c646cfd2.css",
-    "main.js": "/AssistantGPT/static/js/main.1c129799.js",
+    "main.css": "/AssistantGPT/static/css/main.2cb13cfc.css",
+    "main.js": "/AssistantGPT/static/js/main.9aeac0a8.js",
     "static/js/787.2fdcc60f.chunk.js": "/AssistantGPT/static/js/787.2fdcc60f.chunk.js",
     "static/media/KaTeX_AMS-Regular.ttf": "/AssistantGPT/static/media/KaTeX_AMS-Regular.853be92419a6c3766b9a.ttf",
     "static/media/KaTeX_Main-Regular.ttf": "/AssistantGPT/static/media/KaTeX_Main-Regular.9eba1d77abcf2aa6e94e.ttf",
@@ -64,12 +64,12 @@
     "static/media/KaTeX_Size3-Regular.woff": "/AssistantGPT/static/media/KaTeX_Size3-Regular.7947224e8a9914fa332b.woff",
     "static/media/KaTeX_Size3-Regular.woff2": "/AssistantGPT/static/media/KaTeX_Size3-Regular.e1951519f6f0596f7356.woff2",
     "index.html": "/AssistantGPT/index.html",
-    "main.c646cfd2.css.map": "/AssistantGPT/static/css/main.c646cfd2.css.map",
-    "main.1c129799.js.map": "/AssistantGPT/static/js/main.1c129799.js.map",
+    "main.2cb13cfc.css.map": "/AssistantGPT/static/css/main.2cb13cfc.css.map",
+    "main.9aeac0a8.js.map": "/AssistantGPT/static/js/main.9aeac0a8.js.map",
     "787.2fdcc60f.chunk.js.map": "/AssistantGPT/static/js/787.2fdcc60f.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.c646cfd2.css",
-    "static/js/main.1c129799.js"
+    "static/css/main.2cb13cfc.css",
+    "static/js/main.9aeac0a8.js"
   ]
 }
