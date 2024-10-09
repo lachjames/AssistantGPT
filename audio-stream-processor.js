@@ -1,16 +1,29 @@
-// audio-stream-processor.js
-class AudioStreamProcessor extends AudioWorkletProcessor {
+class AudioProcessor extends AudioWorkletProcessor {
     constructor() {
         super();
-        this.port.onmessage = (event) => {
-            // Handle incoming audio data
-        };
+        this.buffer = new Float32Array(0);
+        this.offset = 0;
     }
 
-    process(inputs, outputs) {
-        // Process and output audio data
+    process(inputs, outputs, parameters) {
+        const output = outputs[0];
+        const channelData = output[0];
+
+        if (this.buffer.length - this.offset < channelData.length) {
+            this.port.postMessage('needmore');
+        }
+
+        const available = Math.min(this.buffer.length - this.offset, channelData.length);
+        channelData.set(this.buffer.subarray(this.offset, this.offset + available));
+
+        if (available < channelData.length) {
+            channelData.fill(0, available);
+        }
+
+        this.offset += available;
+
         return true;
     }
 }
 
-registerProcessor('audio-stream-processor', AudioStreamProcessor);
+registerProcessor('audio-processor', AudioProcessor);
